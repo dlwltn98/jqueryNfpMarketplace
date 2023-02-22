@@ -18,6 +18,8 @@
     <script src="./js/abi.js"></script>
     <script>
         $(window).load(async function () { 
+
+            // web3 활성화 확인
             if (typeof web3 !== 'undefined') {
                 console.log("web3가 활성화되었습니다.");
 
@@ -76,7 +78,7 @@
                 
                 html += '<td>' + _price + '</td>';
                 html += '<td>';
-                html += '<a href="./mynft_detail.html?tokenId=' + _nftTokenId + '" class="btn btn-secondary btn-flat">상세보기</a> ';
+                html += '<a href="./mynft_detail.html?pageInfo=myNFT&tokenId=' + _nftTokenId + '" class="btn btn-secondary btn-flat">상세보기</a> ';
                 
                 if (_price == 0) {
                 	html += '<button type="button" class="btn btn-primary btn_onSale" data-bs-toggle="modal" data-bs-target="#saleModal" data-val="' + _nftTokenId + '">판매하기</button> ';
@@ -180,7 +182,6 @@
                 aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarsExample07">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
@@ -192,19 +193,15 @@
                     <li class="nav-item">
                         <a class="nav-link" href="sale.html">판매</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="wallet.html">지갑세팅</a>
-                    </li>
                 </ul>
-
                 <div class="d-flex">
-                    <button type="button" class="btn btn-warning col-md-6" id="btn_setApprovalForAll">거래상태</button>
+                    <button type="button" class="btn btn-warning col-md-6" id="btn_setApprovalForAll" style="width: 200px;">거래상태</button>
                     &nbsp;&nbsp;
                     <span class="col-md-7">
                         <select class="form-select" aria-label="블록체인 네트워크" id="selectNetwork">
-                            <option value="">네트워크를 선택하세요</option>
+                            <!-- <option value="">네트워크를 선택하세요</option> -->
                             <option value="MATIC_MUMBAI">폴리곤-뭄바이</option>
-                            <option value="ETH_RINKEBY">이더리움-Rinkeby</option>
+                            <!-- <option value="ETH_RINKEBY">이더리움-Rinkeby</option> -->
                         </select>
                     </span>
                 </div>

@@ -18,21 +18,23 @@
     <script src="./js/abi.js"></script>
     <script>
         $(window).load(async function () { 
+
+            // web3 활성화 확인
             if (typeof web3 !== 'undefined') {
                 console.log("web3가 활성화되었습니다.");
-
+            
                 $("#resultbrowsers").text("메타마스크에 로그인 해주세요.");
-
+            
                 if(web3.currentProvider.isMetaMask == true) {
                     $("#resultbrowsers").text("메타마스크가 활성화되었습니다.");
                     try {
                         accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-
+                    
                         $("#showAccount").text(accounts);
                         $("#resultbrowsers").text("메타마스크가 활성화되었습니다.");
                         // web3
                         window.web3 = new Web3(window.ethereum);
-
+                    
                         var mintingEvent = await new window.web3.eth.Contract(abiobj, contractAddress);
                     }catch(error) {
                         console.log(`error msg: ${error}`);
@@ -46,14 +48,21 @@
                 $("#resultbrowsers").text("web3를 찾을 수 없습니다.");
             }
 
-            //승인 상태조회
-	        const ApprovalState = await mintingEvent.methods.isApprovedForAll(accounts[0], contractAddress).call();
-	        if (ApprovalState) {
-	        	$("#btn_setApprovalForAll").text("거래상태 : 거래가능");
-	        } else {
-	        	$("#btn_setApprovalForAll").text("거래상태 : 거래중지");
-	        }
-	        //console.log(ApprovalState);	
+            // 거래 승인 상태 조회
+            const ApprovalState = await mintingEvent.methods.isApprovedForAll(accounts[0], contractAddress).call();
+            if (ApprovalState) {
+                $("#btn_setApprovalForAll").text("거래상태 : 거래가능");
+            } else {
+                $("#btn_setApprovalForAll").text("거래상태 : 거래중지");
+            }
+
+            // 거래 승인 상태 변경
+            $('#btn_setApprovalForAll').click(async function () {
+                var receiptObj = await mintingEvent.methods.setApprovalForAll(contractAddress, true).send({ from: accounts[0] });
+                console.log(receiptObj);
+                location.reload();
+            });
+            
 
             //ipfs
             var IPFS_URL = "https://ipfs.io/ipfs/";
@@ -80,7 +89,6 @@
                 }
 
                 var file = document.getElementById("uploadfile").files[0];
-                
 
                 if (file) {
                     var datas, xhr;
@@ -104,23 +112,19 @@
                             var hash_img_url2 = IPFS_URL2 + data_hash['Hash'];
                             //console.log(`Url --> ${ hash_img_url } `);
 
-                            $("#ipfs_file_url").text(hash_img_url);
-                            $("#ipfs_file_url").attr("href", hash_img_url);
+                            // $("#ipfs_file_url").text(hash_img_url);
+                            // $("#ipfs_file_url").attr("href", hash_img_url);
                             $("#ipfs_file_url2").text(hash_img_url2);
                             $("#ipfs_file_url2").attr("href", hash_img_url2);
                             $("#hash_img_url").val(hash_img_url2);
-
                         },
-
                         error: function (jqXHR, textStatus, errorThrown) {
                             alert('ERRORS: ' + textStatus);
 
                         },
-
                         cache: false,
                         contentType: false,
                         processData: false
-
                     });
                 };
             });
@@ -203,14 +207,7 @@
 		        	}
 		        }
             }
-            
-            //상태변경하기
-	        $('#btn_setApprovalForAll').click(async function () {
-	        	var receiptObj = await mintingEvent.methods.setApprovalForAll(contractAddress, true).send({ from: accounts[0] });
-	        	console.log(receiptObj);
-	        	location.reload();
-	        });
-           
+        
         });
     </script>
 </head>
@@ -224,7 +221,6 @@
                 aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarsExample07">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
@@ -236,19 +232,15 @@
                     <li class="nav-item">
                         <a class="nav-link" href="sale.html">판매</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="wallet.html">지갑세팅</a>
-                    </li>
                 </ul>
-
                 <div class="d-flex">
-                    <button type="button" class="btn btn-warning col-md-6" id="btn_setApprovalForAll">거래상태</button>
+                    <button type="button" class="btn btn-warning col-md-6" id="btn_setApprovalForAll" style="width: 200px;">거래상태</button>
                     &nbsp;&nbsp;
                     <span class="col-md-7">
                         <select class="form-select" aria-label="블록체인 네트워크" id="selectNetwork">
-                            <option value="">네트워크를 선택하세요</option>
+                            <!-- <option value="">네트워크를 선택하세요</option> -->
                             <option value="MATIC_MUMBAI">폴리곤-뭄바이</option>
-                            <option value="ETH_RINKEBY">이더리움-Rinkeby</option>
+                            <!-- <option value="ETH_RINKEBY">이더리움-Rinkeby</option> -->
                         </select>
                     </span>
                 </div>
@@ -286,7 +278,7 @@
                     </span>
                 </div>
             </div>
-            <small class="text-muted"><a id="ipfs_file_url" target="_blank"></a></small><br/>
+            <!-- <small class="text-muted"><a id="ipfs_file_url" target="_blank" ></a></small><br/> -->
             <small class="text-muted"><a id="ipfs_file_url2" target="_blank"></a></small>
             <div class="col-12 py-3">
                 <div class="form-group">
@@ -320,6 +312,7 @@
             <span class="text-muted">강의 출처 : 인프런 - jQuery로 구현하는 NFT 마켓플레이스 (이더리움, 폴리곤)</span>
         </div>
     </footer>
+    
 </body>
 <script src="./js/bootstrap.bundle.min.js"></script>
 </html>

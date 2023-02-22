@@ -65,14 +65,24 @@
             function getUrlVars() {
             	var vars = [], hash;
             	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                
             	for (var i = 0; i < hashes.length; i++) {
             		hash = hashes[i].split('=');
             		vars.push(hash[0]);
             		vars[hash[0]] = hash[1];
             	}
+
+                //목록 버튼
+                if(vars["pageInfo"] == 'sale') {
+                    $('#page_mynft').attr('href', './sale.html');
+                }else if(vars["pageInfo"] == 'myNFT') {
+                    $('#page_mynft').attr('href', './myNft.html');
+                }
+
             	return vars;
             }
 
+            // 데이터 파싱 후 알맞은 자리에 넣음
             var tokenId = getUrlVars()["tokenId"];
             var _tokenURI = await mintingEvent.methods.tokenURI(tokenId).call();
             var _ipfsinfo = ipfsInfo(_tokenURI);
@@ -129,31 +139,26 @@
                 aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarsExample07">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="index.html">민팅하기</a>
+                        <a class="nav-link" aria-current="page" href="index.html">민팅하기</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="mynft.html">My-NFT</a>
+                        <a class="nav-link active" href="mynft.html">My-NFT</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="sale.html">판매</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="wallet.html">지갑세팅</a>
-                    </li>
                 </ul>
-
                 <div class="d-flex">
-                    <button type="button" class="btn btn-warning col-md-6" id="btn_setApprovalForAll">거래상태</button>
+                    <button type="button" class="btn btn-warning col-md-6" id="btn_setApprovalForAll" style="width: 200px;">거래상태</button>
                     &nbsp;&nbsp;
                     <span class="col-md-7">
                         <select class="form-select" aria-label="블록체인 네트워크" id="selectNetwork">
-                            <option value="">네트워크를 선택하세요</option>
+                            <!-- <option value="">네트워크를 선택하세요</option> -->
                             <option value="MATIC_MUMBAI">폴리곤-뭄바이</option>
-                            <option value="ETH_RINKEBY">이더리움-Rinkeby</option>
+                            <!-- <option value="ETH_RINKEBY">이더리움-Rinkeby</option> -->
                         </select>
                     </span>
                 </div>
@@ -209,7 +214,7 @@
             </div>
 
             <div class="col-12 mt-5"></div>
-            <button type="button" class="btn btn-primary" id="page_mynft">목록으로</button>
+            <button type="button" class="btn btn-primary"><a id="page_mynft" style="color: white; text-decoration-line: none;">목록으로</a></button>
         </div>
     </div>
 
